@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: fraud-detection-engine
+  kafka:
+    producer:
+      key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      value.serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    streams:
+      properties:
+        "[default.key.serde]": "org.apache.kafka.common.serialization.Serdes$StringSerde"
+        "[default.value.serde]": "org.springframework.kafka.support.serializer.JsonSerde"
+        spring.json:
+          trusted.packages: "*"
+
+kafka:
+  bootstrap-servers: kafka:9092
+
+server:
+  port: 9001
