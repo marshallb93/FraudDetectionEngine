@@ -1,4 +1,5 @@
 package com.marshallbradley.fraud.generation.transactors;
+
 import com.marshallbradley.fraud.models.Transaction;
 
 import java.util.List;

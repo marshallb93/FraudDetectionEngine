@@ -1,0 +1,31 @@
+users:
+  - larry:
+      name: Larry Brown
+      id: d00d17cd-a6d6-40da-af68-64e329aea963
+      type: Transactor
+      limit: 1000
+      naughtiness: 0
+  - mary:
+      name: Mary Webster
+      id: d9859e33-b4b4-4fa8-be3a-4b739128a386
+      type: Transactor
+      limit: 1500
+      naughtiness: 0
+  - hugh:
+      name: High-Roller Hugh
+      id: fe4d3a47-b4d2-4595-a234-4c0faa10221a
+      type: HighVolumeTransactor
+      limit: 10000
+      naughtiness: 10
+  - pete:
+      name: Sneaky Pete
+      id: 7146f829-c16a-4663-bce7-34d17d80fea2
+      type: OverspendTransactor
+      limit: 500
+      naughtiness: 5
+  - susan:
+      name: Schemin Susan
+      id: f874ced6-e096-46e6-adf7-ca44f77baf9e
+      type: IncorrectTimestampTransactor
+      limit: 750
+      naughtiness: 30

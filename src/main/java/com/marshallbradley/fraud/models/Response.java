@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 
+import java.util.UUID;
+
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class FraudulentTransaction {
-    Transaction transaction;
-    FraudType fraudType;
+public class Response {
+    UUID userId;
+    Long count;
 }

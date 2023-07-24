@@ -1,6 +1,13 @@
 spring:
   application:
     name: fraud-detection-engine
+    parameters:
+      invalid-time:
+        grace-period: 30
+      high-volume:
+        threshold: 5
+        time-window: 5
+
   kafka:
     producer:
       key.serializer: org.apache.kafka.common.serialization.StringSerializer
