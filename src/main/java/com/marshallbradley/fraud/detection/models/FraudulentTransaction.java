@@ -1,4 +1,4 @@
-package com.marshallbradley.fraud.detection;
+package com.marshallbradley.fraud.detection.models;
 
 import com.marshallbradley.fraud.models.Transaction;
 import lombok.Value;

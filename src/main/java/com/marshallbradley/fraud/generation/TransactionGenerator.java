@@ -26,7 +26,7 @@ public class TransactionGenerator {
     private List<Transactor> transactors = List.of(
             new Transactor(new User(UUID.randomUUID(), "Larry Brown", 1000)),
             new HighVolumeTransactor(new Transactor(new User(UUID.randomUUID(), "High-Roller Hugh", 10000))),
-            new OverspendTransactor(new Transactor(new User(UUID.randomUUID(), "Sneaky Pete", 500))),
+           // new OverspendTransactor(new Transactor(new User(UUID.randomUUID(), "Sneaky Pete", 500))),
             new IncorrectTimestampTransactor(new Transactor(new User(UUID.randomUUID(), "Schemin' Susan", 1000)))
     );
 

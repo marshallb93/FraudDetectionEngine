@@ -1,4 +1,4 @@
-package com.marshallbradley.fraud.detection;
+package com.marshallbradley.fraud.detection.models;
 
 public enum FraudType {
     OVERSPEND,
