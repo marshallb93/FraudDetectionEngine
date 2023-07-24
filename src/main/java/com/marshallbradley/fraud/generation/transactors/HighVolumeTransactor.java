@@ -18,19 +18,22 @@ public class HighVolumeTransactor extends Transactor {
     }
 
     public List<Transaction> getTransactions() {
-        Random random = new Random();
-        int transactionCount = random.nextInt(20) + 1;
-        // This transactor sends between 1 and 20 transactions in a single time interval
-        return IntStream.range(0, transactionCount)
-                .mapToObj(i -> {
-                    Transaction transaction = delegate.getTransactions().get(0);
-                    return new Transaction(
-                            transaction.getId(),
-                            transaction.getDestinationId(),
-                            transaction.getAmount(),
-                            transaction.getTimestamp()
-                    );
-                })
-                .collect(Collectors.toList());
+        if (delegate.shouldCommitFraud()) {
+            int transactionCount = random.nextInt(20) + 1;
+            // This transactor sends between 1 and 20 transactions in a single time interval
+            return IntStream.range(0, transactionCount)
+                    .mapToObj(i -> {
+                        Transaction transaction = delegate.getTransactions().get(0);
+                        return new Transaction(
+                                transaction.getId(),
+                                transaction.getDestinationId(),
+                                transaction.getAmount(),
+                                transaction.getTimestamp()
+                        );
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            return delegate.getTransactions();
+        }
     }
 }

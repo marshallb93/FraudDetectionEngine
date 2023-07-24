@@ -53,12 +53,12 @@ public class FraudDetectionStreams {
 
         // Detect transactions which are over a user's single transaction limit
         transactionsWithUserStream.filter((key, transactionWithUser) -> transactionWithUser.getLeft().getAmount() >
-                        transactionWithUser.getRight().getSingleTransactionLimit())
+                        transactionWithUser.getRight().getLimit())
                 .map((key, value) -> new KeyValue<>(value.getLeft().getId().toString(),
                         new FraudulentTransaction(value.getLeft(), FraudType.OVERSPEND)))
                 .to(FRAUDULENT_TRANSACTIONS_TOPIC, Produced.with(null, FRAUDULENT_TRANSACTION_SERDE));
 
-        // Detect transactions which are made at too high of a volume
+        // Detect transactions which occur more than "threshold" times within a given "timeWindow"
         transactionsWithUserStream.groupByKey()
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(timeWindow)))
                 .aggregate(ArrayList<Transaction>::new, (aggKey, newValue, aggValue) ->
@@ -84,7 +84,7 @@ public class FraudDetectionStreams {
                 .stream(FRAUDULENT_TRANSACTIONS_TOPIC, Consumed.with(null, FRAUDULENT_TRANSACTION_SERDE))
                 .map((key, transaction) -> new KeyValue<>(String.valueOf(transaction.getTransaction().getUserId()), transaction))
                 .groupByKey()
-                .count(Materialized.with(Serdes.String(), Serdes.Integer()).as(FRAUDULENT_TRANSACTION_COUNT_STORE));
+                .count(Materialized.with(Serdes.String(), Serdes.Long()).as(FRAUDULENT_TRANSACTION_COUNT_STORE));
 
     }
 }

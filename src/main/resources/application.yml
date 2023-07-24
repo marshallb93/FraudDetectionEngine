@@ -16,11 +16,12 @@ spring:
       properties:
         "[default.key.serde]": "org.apache.kafka.common.serialization.Serdes$StringSerde"
         "[default.value.serde]": "org.springframework.kafka.support.serializer.JsonSerde"
-        spring.json:
-          trusted.packages: "*"
+        spring.json.trusted.packages: "*"
 
 kafka:
-  bootstrap-servers: kafka:9092
+  bootstrap-servers: localhost:9092
+
+application.id: a5a882e8-6b04-49cb-86d1-3787571366e6
 
 server:
-  port: 19003
+  port: 19004

@@ -15,8 +15,12 @@ public class OverspendTransactor extends Transactor {
     }
 
     public List<Transaction> getTransactions() {
-        return delegate.getTransactions().stream()
-                .map(t -> new Transaction(t.getUserId(), t.getDestinationId(), t.getAmount() * 2, t.getTimestamp()))
-                .collect(Collectors.toList());
+        if (delegate.shouldCommitFraud()) {
+            return delegate.getTransactions().stream()
+                    .map(t -> new Transaction(t.getUserId(), t.getDestinationId(), t.getAmount() * 2, t.getTimestamp()))
+                    .collect(Collectors.toList());
+        } else {
+            return delegate.getTransactions();
+        }
     }
 }

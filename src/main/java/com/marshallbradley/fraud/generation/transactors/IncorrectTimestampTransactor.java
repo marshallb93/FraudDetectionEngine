@@ -1,6 +1,7 @@
 package com.marshallbradley.fraud.generation.transactors;
 
 import com.marshallbradley.fraud.models.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Random;
@@ -16,11 +17,14 @@ public class IncorrectTimestampTransactor extends Transactor {
     }
 
     public List<Transaction> getTransactions() {
-        Random random = new Random();
-        int timeOffset = random.nextInt(21) - 10;
-        return delegate.getTransactions().stream()
-                .map(t -> new Transaction(t.getUserId(), t.getDestinationId(), t.getAmount(),
-                        t.getTimestamp().plusMinutes(timeOffset)))
-                .collect(Collectors.toList());
+        if (delegate.shouldCommitFraud()) {
+            int timeOffset = random.nextInt(21) - 10;
+            return delegate.getTransactions().stream()
+                    .map(t -> new Transaction(t.getUserId(), t.getDestinationId(), t.getAmount(),
+                            t.getTimestamp().plusMinutes(timeOffset)))
+                    .collect(Collectors.toList());
+        } else {
+            return delegate.getTransactions();
+        }
     }
 }
