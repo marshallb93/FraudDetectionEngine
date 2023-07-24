@@ -24,7 +24,8 @@ dependencies {
 	implementation 'org.apache.kafka:kafka-streams'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
-
+	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka-streams:4.0.3'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.1.2'
 
 
 	compileOnly 'org.projectlombok:lombok:1.18.28'
