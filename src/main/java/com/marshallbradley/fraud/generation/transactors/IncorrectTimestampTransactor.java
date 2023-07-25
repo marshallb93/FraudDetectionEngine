@@ -1,10 +1,8 @@
 package com.marshallbradley.fraud.generation.transactors;
 
 import com.marshallbradley.fraud.models.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class IncorrectTimestampTransactor extends Transactor {

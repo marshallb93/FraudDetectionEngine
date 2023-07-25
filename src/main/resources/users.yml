@@ -1,27 +1,27 @@
 users:
   profiles:
     - name: Larry Brown
-      id: d00d17cd-a6d6-40da-af68-64e329aea963
+      id: d00d17cd-a6d6-40da-af68-64e329aea964
       type: normal
       limit: 1000
       naughtiness: 0
     - name: Mary Webster
-      id: d9859e33-b4b4-4fa8-be3a-4b739128a386
+      id: d9859e33-b4b4-4fa8-be3a-4b739128a385
       type: normal
       limit: 1500
       naughtiness: 0
     - name: High-Roller Hugh
-      id: fe4d3a47-b4d2-4595-a234-4c0faa10221a
+      id: fe4d3a47-b4d2-4595-a234-4c0faa10221b
       type: high-volume
       limit: 10000
-      naughtiness: 10
+      naughtiness: 50
     - name: Sneaky Pete
-      id: 7146f829-c16a-4663-bce7-34d17d80fea2
+      id: 7146f829-c16a-4663-bce7-34d17d80fea1
       type: overspend
       limit: 500
       naughtiness: 5
     - name: Schemin Susan
-      id: f874ced6-e096-46e6-adf7-ca44f77baf9e
+      id: f874ced6-e096-46e6-adf7-ca44f77baf9f
       type: incorrect-timestamp
       limit: 750
       naughtiness: 30

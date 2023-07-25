@@ -4,6 +4,7 @@ import com.marshallbradley.fraud.generation.transactors.Transactor;
 import com.marshallbradley.fraud.generation.transactors.TransactorFactory;
 import com.marshallbradley.fraud.models.Transaction;
 import com.marshallbradley.fraud.models.User;
+import com.marshallbradley.fraud.models.UserConfiguration;
 import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class TransactionGenerator {

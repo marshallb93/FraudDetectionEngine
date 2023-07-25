@@ -24,4 +24,4 @@ kafka:
 application.id: fraud-detection-engine
 
 server:
-  port: 19005
+  port: 8081

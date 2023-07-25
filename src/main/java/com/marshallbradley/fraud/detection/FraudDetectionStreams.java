@@ -18,14 +18,14 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static com.marshallbradley.fraud.kafka.serdes.Serdes.*;
+import static com.marshallbradley.fraud.serdes.Serdes.*;
 
 @Component
 public class FraudDetectionStreams {
 
-    public static final String FRAUDULENT_TRANSACTION_COUNT_STORE = "fraudulent-transactions-count";
     public static final String TRANSACTIONS_TOPIC = "transactions";
     public static final String FRAUDULENT_TRANSACTIONS_TOPIC = "fraudulent-transactions";
+    public static final String FRAUDULENT_TRANSACTION_COUNT_STORE = "fraudulent-transactions-count";
     public static final String USERS_TOPIC = "users";
 
     @Value("${spring.application.parameters.invalid-time.grace-period}")
@@ -61,22 +61,22 @@ public class FraudDetectionStreams {
         // Detect transactions which occur more than "threshold" times within a given "timeWindow"
         transactionsWithUserStream.groupByKey()
                 .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(timeWindow)))
-                .aggregate(ArrayList<Transaction>::new, (aggKey, newValue, aggValue) ->
+                .aggregate(ArrayList<Transaction>::new, (key, pair, transactions) ->
                         {
-                            aggValue.add(newValue.getLeft());
-                            return aggValue;
+                            transactions.add(pair.getLeft());
+                            return transactions;
                         },
                         Materialized.with(Serdes.String(), new JsonSerde<>(ArrayList.class)))
                 .toStream()
                 .filter((key, list) -> list.size() > threshold)
-                .flatMap(Transaction.transactionsToFraudulentTransactionsMapper())
+                .flatMap(transactionsToFraudulentTransactionsMapper())
                 .to(FRAUDULENT_TRANSACTIONS_TOPIC, Produced.with(null, FRAUDULENT_TRANSACTION_SERDE));
 
         // Detect transactions which have a timestamp outside the grace period
         transactionStream
                 .filter((key, value) -> value.getTimestamp().isAfter(LocalDateTime.now().plusSeconds(gracePeriod)) ||
                         value.getTimestamp().isBefore(LocalDateTime.now().minusSeconds(gracePeriod)))
-                .map((key, value) -> new KeyValue<>(key, new FraudulentTransaction(value, FraudType.INVALID_TIME)))
+                .map((key, value) -> new KeyValue<>(key, new FraudulentTransaction(value, FraudType.INCORRECT_TIME)))
                 .to(FRAUDULENT_TRANSACTIONS_TOPIC, Produced.with(null, FRAUDULENT_TRANSACTION_SERDE));
 
         // Create a queryable state store for the number of fraudulent transactions by user ID

@@ -18,6 +18,6 @@ public class TransactorFactory {
         if (user.getType().equals("overspend")) {
             return new OverspendTransactor(transactor);
         }
-        return null;
+        throw new IllegalArgumentException(String.format("Transactor has unexpected type %s", user.getType()));
     }
 }
