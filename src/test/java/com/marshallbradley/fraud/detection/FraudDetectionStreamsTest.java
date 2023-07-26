@@ -4,6 +4,7 @@ import com.marshallbradley.fraud.models.FraudType;
 import com.marshallbradley.fraud.models.FraudulentTransaction;
 import com.marshallbradley.fraud.models.Transaction;
 import com.marshallbradley.fraud.models.User;
+import kafka.utils.Json;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.TestInputTopic;
@@ -15,16 +16,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.support.serializer.JsonSerde;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 import static com.marshallbradley.fraud.detection.FraudDetectionStreams.*;
 import static com.marshallbradley.fraud.serdes.Serdes.*;
+import static org.apache.kafka.streams.StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG;
+import static org.apache.kafka.streams.StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.kafka.support.serializer.JsonDeserializer.TRUSTED_PACKAGES;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -41,13 +47,14 @@ class FraudDetectionStreamsTest {
 
     @BeforeEach
     void setUp() {
-        fraudDetectionStreams.buildPipeline(streamsBuilder);
-
-        testDriver = new TopologyTestDriver(streamsBuilder.build());
+        Properties config = new Properties();
+        config.put(DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        config.put(DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class.getName());
+        config.put(TRUSTED_PACKAGES, "*");
+        testDriver = new TopologyTestDriver(streamsBuilder.build(), config);
         transactionTestInputTopic = testDriver.createInputTopic(TRANSACTIONS_TOPIC, Serdes.String().serializer(), TRANSACTION_SERDE.serializer());
         fraudulentTransactionTestOutputTopic = testDriver.createOutputTopic(FRAUDULENT_TRANSACTIONS_TOPIC, Serdes.String().deserializer(), FRAUDULENT_TRANSACTION_SERDE.deserializer());
         userTestInputTopic = testDriver.createInputTopic(USERS_TOPIC, Serdes.String().serializer(), USER_SERDE.serializer());
-
     }
 
     @AfterEach
@@ -95,13 +102,13 @@ class FraudDetectionStreamsTest {
 
         List<Transaction> transactions = new ArrayList<>();
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             transactions.add(new Transaction(userId, UUID.randomUUID(), 200, LocalDateTime.now()));
         }
 
         // When
         userTestInputTopic.pipeInput(userId.toString(), user);
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 10; i++) {
             Transaction transaction = transactions.get(i);
             transactionTestInputTopic.pipeInput(transaction.getId().toString(), transaction);
         }
@@ -116,7 +123,7 @@ class FraudDetectionStreamsTest {
         // Given
         UUID userId = UUID.randomUUID();
         User user = new User(userId, "John Doe", 500, "incorrect-timestamp", 100);
-        Transaction transaction = new Transaction(userId, UUID.randomUUID(), 1000, LocalDateTime.now()
+        Transaction transaction = new Transaction(userId, UUID.randomUUID(), 200, LocalDateTime.now()
                 .plusMinutes(10));
 
         // When

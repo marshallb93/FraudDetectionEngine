@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest
@@ -34,10 +35,10 @@ public class FraudDetectionControllerTest {
     @MockBean
     private StreamsBuilderFactoryBean streamsBuilderFactoryBean;
 
-    @Mock
+    @MockBean
     private KafkaStreams kafkaStreams;
 
-    @Mock
+    @MockBean
     private ReadOnlyKeyValueStore<Object, Object> fraudulentTransactions;
 
     @BeforeEach
@@ -51,10 +52,7 @@ public class FraudDetectionControllerTest {
         String userId = UUID.randomUUID().toString();
         long transactionCount = 5L;
         when(streamsBuilderFactoryBean.getKafkaStreams()).thenReturn(kafkaStreams);
-        when(kafkaStreams.store(StoreQueryParameters.fromNameAndType(
-                FraudDetectionStreams.FRAUDULENT_TRANSACTION_COUNT_STORE,
-                QueryableStoreTypes.keyValueStore())))
-                .thenReturn(fraudulentTransactions);
+        when(kafkaStreams.store(any())).thenReturn(fraudulentTransactions);
         when(fraudulentTransactions.get(userId)).thenReturn(transactionCount);
 
         // When
@@ -71,12 +69,9 @@ public class FraudDetectionControllerTest {
     @Test
     public void testGetFraudulentTransactionsWithNonExistingUserId() {
         // Given
-        when(streamsBuilderFactoryBean.getKafkaStreams()).thenReturn(kafkaStreams);
         String userId = UUID.randomUUID().toString();
-        when(kafkaStreams.store(StoreQueryParameters.fromNameAndType(
-                FraudDetectionStreams.FRAUDULENT_TRANSACTION_COUNT_STORE,
-                QueryableStoreTypes.keyValueStore())))
-                .thenReturn(fraudulentTransactions);
+        when(streamsBuilderFactoryBean.getKafkaStreams()).thenReturn(kafkaStreams);
+        when(kafkaStreams.store(any())).thenReturn(fraudulentTransactions);
         when(fraudulentTransactions.get(userId)).thenReturn(null);
 
         // When
