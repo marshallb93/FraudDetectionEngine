@@ -18,16 +18,8 @@ public class HighVolumeTransactor extends Transactor {
 
     public List<Transaction> getTransactions() {
         if (delegate.shouldCommitFraud()) {
-            return IntStream.range(0, 51)
-                    .mapToObj(i -> {
-                        Transaction transaction = delegate.getTransactions().get(0);
-                        return new Transaction(
-                                transaction.getId(),
-                                transaction.getDestinationId(),
-                                transaction.getAmount(),
-                                transaction.getTimestamp()
-                        );
-                    })
+            return IntStream.range(0, 21)
+                    .mapToObj(i -> delegate.getTransactions().get(0))
                     .collect(Collectors.toList());
         } else {
             return delegate.getTransactions();

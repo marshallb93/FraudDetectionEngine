@@ -27,6 +27,6 @@ public class Transactor {
     }
 
     protected Boolean shouldCommitFraud() {
-        return random.nextInt(101) > user.getNaughtiness();
+        return user.getNaughtiness() >= random.nextInt(101);
     }
 }

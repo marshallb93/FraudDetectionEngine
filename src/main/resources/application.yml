@@ -5,7 +5,7 @@ spring:
       invalid-time:
         grace-period: 30
       high-volume:
-        threshold: 5
+        threshold: 10
         time-window: 5
 
   kafka:

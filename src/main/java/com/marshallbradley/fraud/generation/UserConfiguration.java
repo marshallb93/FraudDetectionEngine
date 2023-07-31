@@ -1,5 +1,7 @@
-package com.marshallbradley.fraud.models;
+package com.marshallbradley.fraud.generation;
 
+import com.marshallbradley.fraud.models.User;
+import com.marshallbradley.fraud.models.YamlPropertySourceFactory;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
